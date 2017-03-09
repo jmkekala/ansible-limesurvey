@@ -1,33 +1,22 @@
 ---
-limesurvey_with_services: true
+limesurvey_with_services: false
 limesurvey:
-  url: 'https://www.limesurvey.org/en/stable-release?download=1304:limesurvey206plus-build150625targz'
-  package: 'limesurvey206plus-build150625.tar'
+  url: 'https://www.limesurvey.org/stable-release?download=2009:limesurvey2640%20170307targz'
+  package: 'limesurvey2640%20170307.tar.gz'
   admin:
     email: 'your-email@example.net'
-    password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
-  deb:
-    dependencies: # Limesurvey dependencies
-      - 'python-mysqldb'
-      - 'php5'
-      - 'php5-cli'
-      - 'php5-curl'
-      - 'php5-mcrypt'
-      - 'php5-gd'
-      - 'php5-ldap'
-      - 'php5-imap'
-      - 'libapache2-mod-php5'
-      - 'php5-mysql'
-      - 'tar'
-      - 'unzip'
-      - 'bzip2'
-      - 'gzip'
+    password: 'salasana'
+  dependencies: # Limesurvey dependencies
+    - 'tar'
+    - 'unzip'
+    - 'bzip2'
+    - 'gzip'
   web:
-    root: '/var/www/html'
-    user: 'www-data'
+    root: '/srv'
+    user: 'php-user'
   db:
     adminuser: root
-    adminpassword:
+    adminpassword: "{{ mysql_rootPassword }}"
     limeuser: limesurvey
     limepassword: limesurvey
     host: localhost
