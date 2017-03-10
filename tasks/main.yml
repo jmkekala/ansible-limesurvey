@@ -1,40 +1,62 @@
 ---
-- name: Install MySQL and Apache
-  package: name={{ item }} state=installed update_cache=yes
-  with_items: 
-    - apache2
-    - mysql-server
-  when: "{{ limesurvey_with_services }}"
-
 - name: Install dependencies
-  package: name={{ item }} state=installed
+  package:
+    name: "{{ item }} "
+    state: installed
   with_items: "{{ limesurvey.dependencies }}"
 
 - name: Download Limesurvey package
-  get_url: url={{ limesurvey.url }} dest=/tmp/{{ limesurvey.package }}
+  get_url: 
+    url: "{{ limesurvey.url }}"
+    dest: "/tmp/{{ limesurvey.package }}"
 
 - name: Extract Limesurvey package
-  unarchive: copy=no src=/tmp/{{ limesurvey.package }} dest={{ limesurvey.web.root }} group=root owner=root creates={{ limesurvey.web.root }}/limesurvey
+  unarchive: 
+    copy: no 
+    src: "/tmp/{{ limesurvey.package }}"
+    dest: "{{ limesurvey.web.root }}" 
+    group: root
+    owner: root
+    creates: "{{ limesurvey.web.root }}/limesurvey"
 
 - name: Fix permissions
-  file: path={{ limesurvey.web.root }}/{{ item }} owner={{ limesurvey.web.user }} group={{ limesurvey.web.user }} recurse=yes
+  file: 
+    path: "{{ limesurvey.web.root }}/{{ item }}"
+    owner: "{{ limesurvey.web.user }}"
+    group: "{{ limesurvey.web.user }}"
+    recurse: yes
   with_items:
     - limesurvey
 
 - name: Transfer Limesurvey configuration file
-  template: src=config-sample-mysql.php.j2 dest={{ limesurvey.web.root }}/limesurvey/application/config/config.php owner={{ limesurvey.web.user }} mode=0644
-
+  template: 
+    src: config-sample-mysql.php.j2 
+    dest: "{{ limesurvey.web.root }}/limesurvey/application/config/config.php"
+    owner: "{{ limesurvey.web.user }}"
+    mode: 0644
 
 - name: Create Limesurvey database
-  mysql_db: name={{ limesurvey.db.name }} state=present login_host={{ limesurvey.db.host }} login_user={{ limesurvey.db.adminuser }} login_password={{ limesurvey.db.adminpassword }}
+  mysql_db: 
+    name: "{{ limesurvey.db.name }}"
+    state: present 
+    login_host: "{{ limesurvey.db.host }}"
+    login_user: "{{ limesurvey.db.adminuser }}"
+    login_password: "{{ limesurvey.db.adminpassword }}"
   register: limesurvey_db
 
-
 - name: Limesurvey database user
-  mysql_user: name={{ limesurvey.db.limeuser }} password={{ limesurvey.db.limepassword }} priv={{ limesurvey.db.name }}.*:ALL state=present  
+  mysql_user: 
+    name: "{{ limesurvey.db.limeuser }}"
+    password: "{{ limesurvey.db.limepassword }}"
+    priv: "{{ limesurvey.db.name }}.*:ALL"
+    state: present
   when: limesurvey_db|changed
 
 - name: Install limesurvey
-  command: php {{ limesurvey.web.root }}/limesurvey/application/commands/console.php install "{{ limesurvey.admin.name }}" "{{ limesurvey.admin.password }}" "{{ limesurvey.admin.name }}" "{{ limesurvey.admin.email }}"
+  command: >
+    php {{ limesurvey.web.root }}/limesurvey/application/commands/console.php install 
+    "{{ limesurvey.admin.name }}"
+    "{{ limesurvey.admin.password }}"
+    "{{ limesurvey.admin.name }}"
+    "{{ limesurvey.admin.email }}"
   when: limesurvey_db|changed
-

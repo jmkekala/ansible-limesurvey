@@ -1,8 +1,7 @@
 ---
-limesurvey_with_services: false
 limesurvey:
-  url: 'https://www.limesurvey.org/stable-release?download=2009:limesurvey2640%20170307targz'
-  package: 'limesurvey2640%20170307.tar.gz'
+  url: 'https://www.limesurvey.org/stable-release?download=2014:limesurvey2641%20170310targz'
+  package: 'limesurvey2.64.1+170310.tar.gz'
   admin:
     name: admin
     fullname: your-name
@@ -14,11 +13,11 @@ limesurvey:
     - 'bzip2'
     - 'gzip'
   web:
-    root: '/srv'
-    user: 'php-user'
+    root: '/var/www/html'
+    user: 'nginx'
   db:
     adminuser: root
-    adminpassword: "{{ mysql_rootPassword }}"
+    adminpassword: ""
     limeuser: limesurvey
     limepassword: limesurvey
     host: localhost
