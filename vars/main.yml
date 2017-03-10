@@ -4,8 +4,10 @@ limesurvey:
   url: 'https://www.limesurvey.org/stable-release?download=2009:limesurvey2640%20170307targz'
   package: 'limesurvey2640%20170307.tar.gz'
   admin:
+    name: admin
+    fullname: your-name
     email: 'your-email@example.net'
-    password: 'salasana'
+    password: 'your-password'
   dependencies: # Limesurvey dependencies
     - 'tar'
     - 'unzip'
